@@ -4,3 +4,4 @@
 !example.env
 
 bin/*
+assets/style.css
