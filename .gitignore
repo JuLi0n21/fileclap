@@ -1,0 +1,6 @@
+*.env
+*.exe
+*.db
+!example.env
+
+bin/*

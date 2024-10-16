@@ -1,7 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"net/http"
+
+	"github.com/JuLi0n21/fileclap/handlers"
+	"github.com/joho/godotenv"
+)
 
 func main() {
-	fmt.Println("Hello World!")
+	run()
+}
+
+func run() error {
+
+	if err := godotenv.Load(); err != nil {
+		return err
+	}
+
+	http.ListenAndServe(":8080", handlers.NewServer())
+	return nil
+
 }
