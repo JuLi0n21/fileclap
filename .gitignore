@@ -3,5 +3,5 @@
 *.db
 !example.env
 
-bin/*
+tmp/*
 assets/style.css

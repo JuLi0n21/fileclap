@@ -29,14 +29,14 @@ func Index(Name string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><head></head><body><h1>The Start of a New Page!, ")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><head><link rel=\"stylesheet\" type=\"text/css\" href=\"assets/style.css\"></head><body><h1>The Start of a New Page!, ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/index.templ`, Line: 7, Col: 39}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/index.templ`, Line: 9, Col: 39}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
