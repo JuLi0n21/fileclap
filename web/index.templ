@@ -6,7 +6,10 @@ templ Index(Name string) {
 			<link rel="stylesheet" type="text/css" href="assets/style.css"/>
 		</head>
 		<body>
-			<h1>The Start of a New Page!, { Name }</h1>
+			@Menu() {
+				@Sidebar()
+				@Main()
+			}
 		</body>
 	</div>
 }

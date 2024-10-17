@@ -1,0 +1,111 @@
+package web
+
+import "strconv"
+
+templ Menu() {
+	<div class="flex h-screen bg-gray-100 dark:bg-gray-900 dark:text-white">
+		{ children... }
+	</div>
+}
+
+templ Folder(Name string) {
+	<button class="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full justify-start dark:text-white">
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder mr-2 h-4 w-4 dark:text-white">
+			<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path>
+		</svg>{ Name }
+	</button>
+}
+
+templ File(Name string, Daysago int) {
+	<div class="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950" data-id="45">
+		<div class="flex items-center space-x-4">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file h-8 w-8 text-blue-500 dark:text-yellow-300" data-id="47"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path></svg>
+			<div>
+				<h3 class="font-semibold">{ Name }</h3>
+				<p class="text-sm text-gray-500 dark:text-gray-400">Last modified: { strconv.Itoa(Daysago) } days ago</p>
+			</div>
+		</div>
+	</div>
+}
+
+templ Main() {
+	<div class="flex-1 overflow-y-auto">
+		<header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-950">
+			<div class="flex items-center space-x-4">
+				<h1 class="text-lg font-semibold">Document Management</h1>
+			</div>
+			<div class="flex items-center space-x-4">
+				<form class="relative m-2">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400">
+						<circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
+					</svg>
+					<input class="flex h-10 rounded-md border border-input px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 w-full appearance-none bg-gray-100 pl-8 dark:bg-gray-800 md:w-[300px]" placeholder="Search files..." type="search"/>
+				</form>
+			</div>
+		</header>
+		<div class="container mx-auto p-6">
+			<div class="mb-4 flex items-center justify-between">
+				<h2 class="text-2xl font-bold">Documents</h2>
+				<div class="border border-gray-200 bg-white dark:bg-gray-950 dark:border-gray-800 rounded-md">
+					<input id="file-upload" class="hidden" type="file"/>
+					<label for="file-upload" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 cursor-pointer dark:text-yellow-300">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload mr-2 h-4 w-4">
+							<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+							<polyline points="17 8 12 3 7 8"></polyline>
+							<line x1="12" x2="12" y1="3" y2="15"></line>
+						</svg>
+						<p class="text-gray-500 dark:text-white">Upload File</p>
+					</label>
+				</div>
+			</div>
+			<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+				@File("thing.pptx", 1)
+				@File("thing.pptx", 1)
+				@File("thing.pptx", 1)
+				@File("thing.pptx", 1)
+				@File("thing.pptx", 1)
+				@File("thing.pptx", 1)
+				@File("thing.pptx", 1)
+				@File("thing.pptx", 1)
+				@File("thing.pptx", 1)
+				@File("thing.pptx", 1)
+				@File("thing.pptx", 1)
+			</div>
+		</div>
+	</div>
+}
+
+templ Sidebar() {
+	<div class="w-64 border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
+		<div class="flex h-full flex-col">
+			<div class="flex h-14 items-center border-b border-gray-200 dark:border-gray-800 px-4 ">
+				<h1 class="text-lg font-semibold">My Files</h1>
+			</div>
+			<div class="h-full w-full">
+				<div style="min-width: 100%; display: table;">
+					<div class="absolute flex justify-end p-2">
+						<button>
+							<svg class="dark:fill-white absolute top-3 left-56" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+								<path d="M3 21v-3l11-11 3 3-11 11h-3zM20.7 7.3l-1.4 1.4-3-3 1.4-1.4c.39-.39 1.02-.39 1.41 0l1.59 1.59c.39.39.39 1.02 0 1.41z"></path>
+							</svg>
+						</button>
+					</div>
+					<div class="space-y-1 p-2">
+						@Folder("Documents")
+						@Folder("Versicherung")
+						@Folder("Bank")
+						<button class="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full justify-start">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 h-4 w-4">
+								<path d="M3 6h18"></path>
+								<path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+								<path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+								<line x1="10" x2="10" y1="11" y2="17"></line>
+								<line x1="14" x2="14" y1="11" y2="17"></line>
+							</svg>Trash
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
