@@ -4,7 +4,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . /app
-RUN CGO_ENABLED=1 GOOS=linux go build -o /entrypoint
+RUN CGO_ENABLED=1 GOOS=linux go build -o /entrypoint cmd/main.go
 
 # Deploy.
 FROM gcr.io/distroless/static-debian11 AS release-stage
