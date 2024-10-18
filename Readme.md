@@ -1,6 +1,6 @@
 # fileclap
 
-A Simple Document Manager
+A Simple Document Manager, just for u
 
 ## Requirements:
 - CGO
