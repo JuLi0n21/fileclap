@@ -1,0 +1,48 @@
+name: fileclap
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.23.2' 
+      - name: Install dependencies
+        run: go mod tidy & go install github.com/a-h/templ/cmd/templ@latest
+
+      - name: Generate code
+        run: templ generate
+
+   
+      - name: Run tests
+        run: echo "no tests..."
+
+    
+      - name: Build Docker image
+        run: |
+          docker build -t your-dockerhub-juli0n21/fileclap:latest .
+
+      - name: Log in to Docker Hub
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+        run: |
+          echo "${DOCKER_HUB_TOKEN}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin
+
+      # Step 8: Push Docker image to Docker Hub
+      - name: Push Docker image
+        run: |
+          docker push your-dockerhub-juli0n21/fileclap:latest
