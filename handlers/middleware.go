@@ -11,6 +11,8 @@ import (
 	"github.com/JuLi0n21/fileclap/utils"
 )
 
+var Users = map[string]*models.User{}
+
 var AuthCookie string = "fileclap_session_cookie"
 
 func Wrapper(fn func(w http.ResponseWriter, r *http.Request) error) http.HandlerFunc {
@@ -26,12 +28,12 @@ func Auth(next func(w http.ResponseWriter, r *http.Request) error) func(w http.R
 	return func(w http.ResponseWriter, r *http.Request) error {
 
 		var ctx context.Context
-		var u models.User
+		var u *models.User
+		var cookie http.Cookie
 
 		if cookie, err := r.Cookie(AuthCookie); err == nil {
 
-			_ = cookie
-			u = models.User{Name: "Julian", ID: 1}
+			u = Users[cookie.Value]
 		} else if err == http.ErrNoCookie {
 
 			value, err := utils.GenValue(128)
@@ -49,6 +51,18 @@ func Auth(next func(w http.ResponseWriter, r *http.Request) error) func(w http.R
 			http.SetCookie(w, cookie)
 		} else {
 			return err
+		}
+
+		if u == nil {
+			u = models.NewUser("Default User")
+			Users[cookie.Value] = u
+
+		}
+
+		uuid := r.PathValue("useruuid")
+		if uuid != "" && uuid != u.ID.String() {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return nil
 		}
 
 		ctx = context.WithValue(r.Context(), models.UserContext, u)

@@ -1,6 +1,7 @@
 package web
 
-import "strconv"
+import _ "strconv"
+import "github.com/JuLi0n21/fileclap/models"
 
 templ Menu() {
 	<div class="flex h-screen bg-gray-100 dark:bg-gray-900 dark:text-white">
@@ -16,19 +17,19 @@ templ Folder(Name string) {
 	</button>
 }
 
-templ File(Name string, Daysago int) {
+templ File(file *models.File) {
 	<div class="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950" data-id="45">
 		<div class="flex items-center space-x-4">
 			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file h-8 w-8 text-blue-500 dark:text-yellow-300" data-id="47"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path></svg>
 			<div>
-				<h3 class="font-semibold">{ Name }</h3>
-				<p class="text-sm text-gray-500 dark:text-gray-400">Last modified: { strconv.Itoa(Daysago) } days ago</p>
+				<h3 class="font-semibold">{ file.Name }</h3>
+				<p class="text-sm text-gray-500 dark:text-gray-400">Uploaded: { file.Date.Format("Monday") } </p>
 			</div>
 		</div>
 	</div>
 }
 
-templ Main() {
+templ Main(files []*models.File) {
 	<div class="flex-1 overflow-y-auto">
 		<header class="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-950">
 			<div class="flex items-center space-x-4">
@@ -59,23 +60,15 @@ templ Main() {
 				</div>
 			</div>
 			<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-				@File("thing.pptx", 1)
-				@File("thing.pptx", 1)
-				@File("thing.pptx", 1)
-				@File("thing.pptx", 1)
-				@File("thing.pptx", 1)
-				@File("thing.pptx", 1)
-				@File("thing.pptx", 1)
-				@File("thing.pptx", 1)
-				@File("thing.pptx", 1)
-				@File("thing.pptx", 1)
-				@File("thing.pptx", 1)
+				for _, file := range(files) {
+					@File(file)
+				}
 			</div>
 		</div>
 	</div>
 }
 
-templ Sidebar() {
+templ Sidebar(folders []*models.Folder) {
 	<div class="w-64 border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950">
 		<div class="flex h-full flex-col">
 			<div class="flex h-14 items-center border-b border-gray-200 dark:border-gray-800 px-4 ">
@@ -91,9 +84,9 @@ templ Sidebar() {
 						</button>
 					</div>
 					<div class="space-y-1 p-2">
-						@Folder("Documents")
-						@Folder("Versicherung")
-						@Folder("Bank")
+						for _, folder := range(folders) {
+							@Folder(folder.Name)
+						}
 						<button class="inline-flex items-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full justify-start">
 							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash2 h-4 w-4">
 								<path d="M3 6h18"></path>

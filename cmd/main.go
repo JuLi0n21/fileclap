@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/JuLi0n21/fileclap/handlers"
+	"github.com/JuLi0n21/fileclap/repository"
 	"github.com/joho/godotenv"
 )
 
@@ -17,7 +18,13 @@ func run() error {
 		return err
 	}
 
-	http.ListenAndServe(":8080", handlers.NewServer())
+	repo, err := repository.NewSQLiteRepository("database.db")
+	if err != nil {
+		panic(err)
+	}
+	defer repo.Close()
+
+	http.ListenAndServe(":8080", handlers.NewServer(repo))
 	return nil
 
 }
