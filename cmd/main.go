@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/JuLi0n21/fileclap/handlers"
@@ -15,7 +16,7 @@ func main() {
 func run() error {
 
 	if err := godotenv.Load(); err != nil {
-		return err
+		panic(err)
 	}
 
 	repo, err := repository.NewSQLiteRepository("database.db")
@@ -24,7 +25,7 @@ func run() error {
 	}
 	defer repo.Close()
 
-	http.ListenAndServe(":8080", handlers.NewServer(repo))
+	log.Fatal(http.ListenAndServe(":8080", handlers.NewServer(repo)))
 	return nil
 
 }
