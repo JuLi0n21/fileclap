@@ -16,7 +16,7 @@ func main() {
 func run() error {
 
 	if err := godotenv.Load(); err != nil {
-		panic(err)
+		log.Println("No .env Provided using System Variables")
 	}
 
 	repo, err := repository.NewSQLiteRepository("database.db")

@@ -14,6 +14,5 @@ FROM ubuntu:latest
 WORKDIR /
 COPY --from=build-stage /main /main
 COPY --from=build-stage /app/assets /assets
-COPY --from=build-stage /app/.env /.env
 EXPOSE 8080
 ENTRYPOINT ["/main"]
