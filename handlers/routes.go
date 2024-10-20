@@ -13,6 +13,7 @@ func NewServer(repo *repository.Repository) http.Handler {
 	r.Handle("GET /assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
 	r.HandleFunc("GET /{$}", Wrapper(Auth(h.Index)))
+	r.HandleFunc("GET /login", Wrapper(Auth(h.Login)))
 	r.HandleFunc("GET /u/{useruuid}/settings", Wrapper(Auth(h.Settings)))
 
 	return r

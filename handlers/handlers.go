@@ -43,3 +43,11 @@ func (s *Server) Settings(w http.ResponseWriter, r *http.Request) error {
 	fmt.Fprintln(w, "hi")
 	return nil
 }
+
+func (s *Server) Login(w http.ResponseWriter, r *http.Request) error {
+
+	cmp := web.Login()
+	cmp.Render(r.Context(), w)
+
+	return nil
+}
