@@ -2,10 +2,12 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 
 	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/JuLi0n21/fileclap/models"
+	"github.com/JuLi0n21/fileclap/utils"
 	"github.com/google/uuid"
 )
 
@@ -34,7 +36,10 @@ func (r *Repository) initDB() error {
 	createUserTable := `
 	CREATE TABLE IF NOT EXISTS users (
 		id TEXT PRIMARY KEY,
-		name TEXT NOT NULL
+		name TEXT UNIQUE NOT NULL,
+		email TEXT UNIQUE NOT NULL,
+		password TEXT NOT NULL,
+		salt TEXT NOT NULL
 	);`
 	if _, err := r.db.Exec(createUserTable); err != nil {
 		return err
@@ -83,10 +88,45 @@ func NewUserRepository(db *sql.DB) *UserRepositorySQLite {
 }
 
 // CreateUser inserts a new user into the database.
-func (r *UserRepositorySQLite) CreateUser(user *models.User) error {
-	query := "INSERT INTO users (id, name) VALUES (?, ?)"
-	_, err := r.db.Exec(query, user.ID, user.Name)
-	return err
+func (r *UserRepositorySQLite) RegisterUser(name, email, password string) (*models.User, error) {
+
+	u := models.NewUser(name)
+
+	s, err := utils.GenValue(24)
+	if err != nil {
+		return nil, err
+	}
+
+	p, err := utils.HashPassword(s, password)
+	if err != nil {
+		return nil, err
+	}
+
+	query := "INSERT INTO users (id, name, email, password, salt) VALUES (?, ?, ?, ?, ?)"
+	_, err = r.db.Exec(query, u.ID, u.Name, email, p, s)
+	return u, err
+}
+
+func (r *UserRepositorySQLite) LoginUser(name, password string) (*models.User, error) {
+
+	query := "SELECT * FROM users WHERE name = ? OR email = ?"
+	row := r.db.QueryRow(query, name, name)
+
+	var user models.User
+	var s, p, e string
+
+	if err := row.Scan(&user.ID, &user.Name, e, p, s); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.New("Incorrect sign in")
+		}
+		return nil, err
+	}
+
+	if !utils.CheckPasswordHash(s, password, p) {
+		return nil, errors.New("Incorrect sign in")
+	}
+
+	return &user, nil
 }
 
 // GetUserByID retrieves a user by their ID.

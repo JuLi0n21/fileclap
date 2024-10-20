@@ -1,6 +1,10 @@
 package utils
 
-import "crypto/rand"
+import (
+	"crypto/rand"
+
+	"golang.org/x/crypto/bcrypt"
+)
 
 func GenValue(length int) (string, error) {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -15,4 +19,14 @@ func GenValue(length int) (string, error) {
 	}
 
 	return string(byteArray), nil
+}
+
+func HashPassword(salt, password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(salt+password), bcrypt.DefaultCost)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(salt, password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(salt+password))
+	return err == nil
 }

@@ -61,7 +61,7 @@ func Auth(next func(w http.ResponseWriter, r *http.Request) error) func(w http.R
 
 		uuid := r.PathValue("useruuid")
 		if uuid != "" && uuid != u.ID.String() {
-			http.Redirect(w, r, "/", http.StatusSeeOther)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return nil
 		}
 

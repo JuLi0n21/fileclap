@@ -3,15 +3,11 @@ package web
 import "github.com/JuLi0n21/fileclap/models"
 
 templ Index(Name string, fiels []*models.File, folders []*models.Folder) {
-	<div>
-		<head>
-			<link rel="stylesheet" type="text/css" href="assets/style.css"/>
-		</head>
-		<body>
-			@Menu() {
-				@Sidebar(folders)
-				@Main(fiels)
-			}
-		</body>
-	</div>
+	@Head()
+	<body>
+		@Menu() {
+			@Sidebar(folders)
+			@Main(fiels)
+		}
+	</body>
 }

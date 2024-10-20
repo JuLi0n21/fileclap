@@ -8,7 +8,8 @@ import (
 )
 
 type UserRepository interface {
-	CreateUser(user *models.User) error
+	LoginUser(name string, password string) (*models.User, error)
+	RegisterUser(name string, email string, password string) (*models.User, error)
 	GetUserByID(id uuid.UUID) (*models.User, error)
 	GetAllUsers() ([]*models.User, error)
 	UpdateUser(user *models.User) error
